@@ -1,4 +1,4 @@
-import {IProduct, IBuyer} from '../../types'
+import {IProduct} from '../../types'
 
 export class Cart {
     private items: IProduct[] = [];

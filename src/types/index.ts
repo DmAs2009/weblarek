@@ -16,6 +16,8 @@ export interface IProduct {
   price: number | null;
 }
 
+export type TPayment = "cash" | "online";
+
 // Интерфейс покупателя
 
 export interface IBuyer {
