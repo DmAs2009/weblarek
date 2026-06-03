@@ -1,19 +1,19 @@
 import {IProduct, IBuyer} from '../../types';
 
-export class Goods {
-    private goods: IProduct[] = [];
+export class Products {
+    private items: IProduct[] = [];
     private selectedItem: IProduct | null = null;
 
-    saveProducts(products:IProduct[]): void {
-        this.goods = [...products];
+    setItems(products:IProduct[]): void {
+        this.items = [...products];
     }
 
-    getProducts(): IProduct[] {
-        return [...this.goods];
+    getItems(): IProduct[] {
+        return [...this.items];
     }
 
-    getProductById(id:string): IProduct | null {
-        return this.goods.find((product) => product.id === id) || null;
+    getItemById(id:string): IProduct | null {
+        return this.items.find((product) => product.id === id) || null;
     }
 
     saveSelectedItem(product: IProduct): void {
@@ -25,6 +25,6 @@ export class Goods {
     }
 
     isItemSlected(): boolean {
-        return this.selectedItem !== null;
+        return this.selectedItem !== null; 
     }
 }
