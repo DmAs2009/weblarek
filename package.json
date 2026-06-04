@@ -9,7 +9,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "css-loader": "^7.1.4",
+    "sass": "^1.100.0",
     "sass-embedded": "^1.90.0",
+    "sass-loader": "^17.0.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.0"
   }
