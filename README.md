@@ -139,3 +139,48 @@ phone
 Проверка данных - валидация корректности введенных данных
 Получение данных - получение данных пользователя
 Сохранение данных - сохранение данных в момент заполнения форм пользователем
+
+### Слой коммутации
+
+Для взаимодействия с сервером используется класс ProductOrderService.
+
+Класс включает в себя два метода:
+
+#### метод подучения списка товаров
+
+данный метод использует GET запрос на сервер для получения списка всех товаров
+
+async getProducts(): Promise<IProductListResponse> {
+    return this.api.get<IProductListResponse>('/product/');
+  }
+
+#### метод создания заказа
+
+данный метод использует POST запрос на сервер для создания заказа
+
+async createOrder(orderData: IOrderRequest): Promise<IOrderResponse> {
+    return this.api.post<IOrderResponse>('/order/', orderData);
+  }
+
+
+### класс ProductOrderService
+
+export class ProductOrderService {
+  private api: Api;
+
+  constructor(baseUrl: string) {
+    this.api = new Api(baseUrl);
+  }
+
+  //Получает список товаров с сервера
+
+  async getProducts(): Promise<IProductListResponse> {
+    return this.api.get<IProductListResponse>('/product/');
+  }
+
+  //Создаёт заказ на товары
+
+  async createOrder(orderData: IOrderRequest): Promise<IOrderResponse> {
+    return this.api.post<IOrderResponse>('/order/', orderData);
+  }
+}

@@ -1,8 +1,21 @@
-//import '.scss/styles.scss';
+import './scss/styles.scss';
 
 import { Buyer } from './components/Models/Buyer';
-import { Products } from './components/Models/Products'; // Предполагаемый класс для товаров
+import { Products } from './components/Models/Products';
 import { apiProducts } from './utils/data';
+import { ProductOrderService } from './components/Models/ProductOrderService';
+
+//Получение списка товаров
+const service = new ProductOrderService(`${import.meta.env.VITE_API_ORIGIN}/api/weblarek`);
+(async () => {
+  try {
+    const products = await service.getProducts();
+    console.log('Все товары:', products.items);
+    console.log('Всего товаров:', products.total);
+  } catch (error) {
+    console.error('Ошибка при получении товаров:', error);
+  }
+})();
 
 
 // Тестирование Products
@@ -48,4 +61,3 @@ console.log('Данные после обновления:', buyerModel.getAllDa
 console.log('\n4. Очистка данных покупателя:');
 buyerModel.clearAll();
 console.log('Данные после очистки:', buyerModel.getAllData());
-
