@@ -22,30 +22,22 @@ export interface IProductListResponse {
 }
 
 // Типы для заказа
-export interface IOrderRequest {
-  payment: 'online' | 'cash';
-  email: string;
-  phone: string;
-  address: string;
-  total: number;
-  items: string[]; // массив ID товаров
-}
+export interface IOrderRequest extends IBuyer{
+    total: number;
+    items: string[];
+} 
 
 export interface IOrderResponse {
   id: string;
   total: number;
 }
 
-export interface IErrorResponse {
-  error: string;
-}
-
-export type TPayment = "cash" | "online";
+export type TPayment = "cash" | "online" | "null";
 
 // Интерфейс покупателя
 
 export interface IBuyer {
-  payment: TPayment;
+  payment: TPayment | null;
   email: string;
   phone: string;
   address: string;

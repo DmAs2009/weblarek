@@ -2,11 +2,8 @@ import { Api } from '../base/Api';
 import { IProductListResponse, IOrderRequest, IOrderResponse } from '../../types';
 
 export class ProductOrderService {
-  private api: Api;
 
-  constructor(baseUrl: string) {
-    this.api = new Api(baseUrl);
-  }
+  constructor(private readonly api: Api) {}
 
   //Получает список товаров с сервера
 

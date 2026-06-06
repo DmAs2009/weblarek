@@ -2,7 +2,6 @@ import {IProduct} from '../../types'
 
 export class Cart {
     private items: IProduct[] = [];
-    private totalPrice: number = 0;
 
     getItems(): IProduct[] {
         return [...this.items];
@@ -10,24 +9,18 @@ export class Cart {
     
     addItem(product: IProduct): void {
         this.items.push(product);
-        this.totalPrice += product.price || 0;
     }
 
     removeItem(productId: string): void {
-        const index = this.items.findIndex(item => item.id === productId);
-        if (index !== -1) {
-            this.totalPrice -= this.items[index].price || 0;
-            this.items.splice(index, 1);
-        }
-    }
+        this.items = this.items.filter((item) => item.id !== productId);
+    } 
 
     clearCart():void {
         this.items = []
-        this.totalPrice = 0;
     }
 
     getTotalPrice(): number {
-        return this.totalPrice;
+        return this.items.reduce((total, item) => total +(item.price || 0), 0);
     }
 
     getItemsQuantity(): number{
@@ -35,7 +28,6 @@ export class Cart {
     }
 
     checkItem(productId: string): boolean {
-        const index = this.items.findIndex(item => item.id === productId);
-        return index !== -1
-    }
+        return this.items.some((item) => item.id === productId);
+    } 
 }

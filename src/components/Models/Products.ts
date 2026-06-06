@@ -1,4 +1,4 @@
-import {IProduct, IBuyer} from '../../types';
+import {IProduct} from '../../types';
 
 export class Products {
     private items: IProduct[] = [];
@@ -16,15 +16,13 @@ export class Products {
         return this.items.find((product) => product.id === id) || null;
     }
 
-    saveSelectedItem(product: IProduct): void {
+    saveSelectedItem(product: IProduct) {
         this.selectedItem = {...product};
+        return this.selectedItem;
     }
 
     getSelectedItem(): IProduct | null {
-        return this.selectedItem ? {...this.selectedItem} : null;
+        return this.selectedItem;
     }
 
-    isItemSlected(): boolean {
-        return this.selectedItem !== null; 
-    }
 }
