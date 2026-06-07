@@ -32,7 +32,7 @@ export interface IOrderResponse {
   total: number;
 }
 
-export type TPayment = "cash" | "online" | "null";
+export type TPayment = "cash" | "online";
 
 // Интерфейс покупателя
 

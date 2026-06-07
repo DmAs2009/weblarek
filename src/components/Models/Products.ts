@@ -18,7 +18,6 @@ export class Products {
 
     saveSelectedItem(product: IProduct) {
         this.selectedItem = {...product};
-        return this.selectedItem;
     }
 
     getSelectedItem(): IProduct | null {

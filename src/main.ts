@@ -10,19 +10,6 @@ import { Api } from './components/base/Api';
 
 const api = new Api(API_URL)
 
-//Получение списка товаров
-const service = new ProductOrderService(api);
-(async () => {
-  try {
-    const products = await service.getProducts();
-    console.log('Все товары:', products.items);
-    console.log('Всего товаров:', products.total);
-  } catch (error) {
-    console.error('Ошибка при получении товаров:', error);
-  }
-})();
-
-
 // Тестирование Products
 
 console.log('=== Тестирование Products ===');
@@ -122,3 +109,15 @@ console.log(`Очищаем корзину...`);
 cartModel.clearCart();
 console.log(`Количество товаров после очистки: ${cartModel.getItemsQuantity()} (${cartModel.getItemsQuantity() === 0 ? 'Корзина пуста' : 'Корзина не пуста'})`);
 console.log('Список товаров после очистки:', cartModel.getItems());
+
+// Получение списка товаров
+const service = new ProductOrderService(api);
+(async () => {
+  try {
+    const products = await service.getProducts();
+    console.log('Все товары:', products.items);
+    console.log('Всего товаров:', products.total);
+  } catch (error) {
+    console.error('Ошибка при получении товаров:', error);
+  }
+})();
