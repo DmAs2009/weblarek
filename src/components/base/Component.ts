@@ -8,6 +8,11 @@ export abstract class Component<T> {
 
     // Инструментарий для работы с DOM в дочерних компонентах
 
+    //Меняем текст
+    protected setText(element: HTMLElement, value: string): void {
+    element.textContent = String(value);
+    }
+
     // Установить изображение с альтернативным текстом
     protected setImage(element: HTMLImageElement, src: string, alt?: string) {
         if (element) {
