@@ -18,9 +18,6 @@ export class Product extends BaseModel<IProduct> {
   }
 }
 
-/*
-  * Класс, описывающий состояние приложения
-  * */
 export class AppState extends BaseModel<IAppState> {
   // Корзина с товарами
   basket: Product[] = [];

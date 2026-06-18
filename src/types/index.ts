@@ -5,6 +5,10 @@ export interface IApi {
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
 
+export interface IApiResponse {
+  items: IProduct[];
+}
+
 // Интерфейс товара
 
 export interface IProduct {
@@ -14,6 +18,7 @@ export interface IProduct {
   title: string;
   category: string;
   price: number | null;
+  selected?: boolean;
 }
 
 export interface IProductListResponse {
