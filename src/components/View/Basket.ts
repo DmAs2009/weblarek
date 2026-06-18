@@ -3,9 +3,7 @@ import { handlePrice, ensureElement} from '../../utils/utils';
 import { Component } from '../base/Component';
 import { IEvents } from '../base/Events';
 
-/*
-  * Интерфейс, описывающий корзину товаров
-  * */
+
 export interface IBasket {
   // Массив элементов li с товаром
   list: HTMLElement[];
@@ -14,9 +12,7 @@ export interface IBasket {
   price: number;
 }
 
-/*
-  * Класс, описывающий корзину товаров
-  * */
+
 export class Basket extends Component<IBasket> {
   // Ссылки на внутренние элементы
   protected _list: HTMLElement | null;

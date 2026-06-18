@@ -1,8 +1,7 @@
 import { IEvents } from "./Events";
 
-/**
- * Базовая модель, чтобы можно было отличить ее от простых объектов с данными
- */
+//Базовая модель, чтобы можно было отличить ее от простых объектов с данными
+
 export abstract class BaseModel<T> {
   constructor(data: Partial<T>, protected events: IEvents) {
     Object.assign(this, data);
