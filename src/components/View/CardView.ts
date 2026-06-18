@@ -32,11 +32,11 @@ export class CardView extends Component<ICard> {
   ) {
     super(container);
 
-    this._title = ensureElement<HTMLElement>(`.card__title`, container);
-    this._image = ensureElement<HTMLImageElement>('.card__image', container);
-    this._button = container.querySelector(`.card__button`);
-    this._category = container.querySelector(`.card__category`);
-    this._price = container.querySelector(`.card__price`);
+    this._title = ensureElement<HTMLElement>(`.${blockName}__title`, container);
+    this._image = ensureElement<HTMLImageElement>(`.${blockName}__image`, container);
+    this._button = container.querySelector(`.${blockName}__button`);
+    this._category = container.querySelector(`.${blockName}__category`);
+    this._price = container.querySelector(`.${blockName}__price`);
 
     if (actions?.onClick) {
       if (this._button) {
