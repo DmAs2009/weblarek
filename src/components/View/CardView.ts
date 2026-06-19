@@ -65,7 +65,7 @@ export class CardView extends Component<ICard> {
     return this._title.textContent || '';
   }
 
-  // Сеттер для кратинки
+  // Сеттер для картинки
   set image(value: string) {
     this._image.src = value.startsWith('/')
     ? `${import.meta.env.VITE_API_ORIGIN}${value}`

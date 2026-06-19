@@ -10,7 +10,7 @@ import { Api, ApiListResponse } from './components/base/Api';
 import { ensureElement } from './utils/utils';
 import { Basket, StoreItemBasket } from './components/View/Basket';
 import { Success } from './components/View/Success';
-import { IOrderForm, IProduct } from './types';
+import { IOrderForm} from './types';
 import { AppState } from './components/View/AppPage';
 import { Page } from './components/View/MainPage';
 import { Modal } from './components/View/Modal';

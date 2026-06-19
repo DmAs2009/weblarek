@@ -217,3 +217,160 @@ export class ProductOrderService {
     return this.api.post<IOrderResponse>('/order/', orderData);
   }
 }
+
+### Слой представления
+
+Все классы представления отвечают за отображение внутри контейнера (DOM-элемент) передаваемых в них данных.
+
+#### Класс Modal
+Реализует модальное окно. Особенность в том, что в приложении только один экземпляр этого класса
+
+#### Класс Form
+Служит для проверки корректности заполнения форм
+
+#### Класс Success 
+Реализация содержимого окошка с результатом оформления заказа
+
+#### Класс MainPage
+Класс, описывающий главную страницу
+
+##### Ссылки на внутренние элементы
+  protected _counter: HTMLElement;
+  protected _store: HTMLElement;
+  protected _wrapper: HTMLElement;
+  protected _basket: HTMLElement;
+
+#####  Конструктор принимает родительский элемент и обработчик событий
+  constructor(container: HTMLElement, protected events: IEvents) {
+    super(container);
+
+    this._counter = ensureElement<HTMLElement>('.header__basket-counter');
+    this._store = ensureElement<HTMLElement>('.gallery');
+    this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
+    this._basket = ensureElement<HTMLElement>('.header__basket');
+
+    this._basket.addEventListener('click', () => {
+      this.events.emit('basket:open');
+    });
+  }
+
+##### Сеттер для счётчика товаров в корзине
+  set counter(value: number) {
+    this.setText(this._counter, String(value));
+  }
+
+##### Сеттер для карточек товаров на странице
+  set store(items: HTMLElement[]) {
+    this._store.replaceChildren(...items);
+  }
+
+##### Сеттер для блока прокрутки
+  set locked(value: boolean) {
+    if (value) {
+      this._wrapper.classList.add('page__wrapper_locked');
+    } else {
+      this._wrapper.classList.remove('page__wrapper_locked');
+    }
+  }
+}
+
+#### Класс CardView
+Описывает карточку товара на главной странице
+
+##### Сеттер и геттер для уникального ID
+  set id(value: string) {
+    this.container.dataset.id = value;
+  }
+  get id(): string {
+    return this.container.dataset.id || '';
+  }
+
+##### Сеттер и гетер для названия
+  set title(value: string) {
+    console.log('Полученное название:', value);
+    this._title.textContent = value;
+  }
+  
+  get title(): string {
+    return this._title.textContent || '';
+  }
+
+##### Сеттер для картинки
+  set image(value: string) {
+    this._image.src = value.startsWith('/')
+    ? `${import.meta.env.VITE_API_ORIGIN}${value}`
+    : `${CDN_URL}${value}`;
+  }
+
+##### Сеттер для определения выбрали товар или нет
+  set selected(value: boolean) {
+    if (this._button && !this._button.disabled) {
+      this._button.disabled = value;
+    }
+  }
+
+##### Сеттер для цены
+  set price(value: number | null) {
+    if (this._price) { // Проверяем на null
+    this._price.textContent = value
+      ? handlePrice(value) + ' синапсов'
+      : 'Бесценно';
+    }
+  }
+
+##### Сеттер для категории
+  set category(value: string) {
+    if (this._category) {
+    this._category.textContent = value;
+    
+    // Безопасное добавление класса с проверкой типа
+    const categoryKey = value as keyof typeof categoryMap;
+    
+    // Проверяем, что ключ действительно существует в categoryMap
+    if (categoryKey in categoryMap) {
+      this._category.classList.add(categoryMap[categoryKey]);
+    }
+    }
+    }
+
+
+#### Класс Basket
+Класс для реализации корзины покупок
+
+##### Сеттер для общей цены
+  set price(price: number) {
+    if (this._price) {
+      this._price.textContent = handlePrice(price) + ' синапсов';
+    }
+  }
+
+##### Сеттер для списка товаров 
+  set list(items: HTMLElement[]) {
+    if (this._list) {
+      this._list.replaceChildren(...items);
+    }
+    
+    if (this._button) {
+      this._button.disabled = !items.length;
+    }
+  }
+
+##### Метод отключающий кнопку "Оформить"
+  disableButton() {
+    if (this._button) {
+      this._button.disabled = true;
+    }
+  }
+
+##### Метод для обновления индексов таблички при удалении товара из корзины
+  refreshIndices() {
+    if (!this._list) return;
+
+    Array.from(this._list.children).forEach(
+      (item, index) =>
+      (item.querySelector(`.basket__item-index`)!.textContent = (
+        index + 1
+      ).toString())
+    );
+  }
+
