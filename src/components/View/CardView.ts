@@ -57,15 +57,19 @@ export class CardView extends Component<ICard> {
 
   // Сеттер и гетер для названия
   set title(value: string) {
+    console.log('Полученное название:', value);
     this._title.textContent = value;
   }
+  
   get title(): string {
     return this._title.textContent || '';
   }
 
   // Сеттер для кратинки
   set image(value: string) {
-    this._image.src = CDN_URL + value;
+    this._image.src = value.startsWith('/')
+    ? `${import.meta.env.VITE_API_ORIGIN}${value}`
+    : `${CDN_URL}${value}`;
   }
 
   // Сеттер для определения выбрали товар или нет
