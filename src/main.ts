@@ -152,7 +152,7 @@ function init() {
   })
 
   // Открытие корзины
-  events.on('basket:open', () => {
+  events.on('cart:open', () => {
       cartView.disabled = cartModel.getItemsQuantity() === 0
       modalView.open()
       modalView.render({ 
