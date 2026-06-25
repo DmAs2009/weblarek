@@ -1,30 +1,37 @@
-import { ensureElement } from "../../utils/utils";
-import { Component } from "../base/Component";
-import { IEvents } from "../base/Events";
+import { handlePrice } from '../../utils/utils';
+import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
 
+interface ISuccessActions {
+  onClick: (event: MouseEvent) => void;
+}
 
-interface ISuccess {
-    success: HTMLElement;
-    description:HTMLElement;
-    button:HTMLButtonElement;
-    totalAmount: number;
+export interface ISuccess {
+  description: number;
 }
 
 export class Success extends Component<ISuccess> {
-    protected successDescription:  HTMLElement;
-    protected successButton: HTMLButtonElement;
+  protected _button: HTMLButtonElement;
+  protected _description: HTMLElement;
 
-    constructor(container: HTMLElement, protected events: IEvents) {
-        super(container);
+  constructor(
+    protected blockName: string,
+    container: HTMLElement,
+    actions?: ISuccessActions
+  ) {
+    super(container);
 
-        this.successDescription = ensureElement<HTMLElement>('.order-success__description', this.container);
-        this.successButton = ensureElement<HTMLButtonElement>('.order-success__close', this.container)
+    this._button = ensureElement<HTMLButtonElement>(`.${blockName}__close`, container);
+    this._description = ensureElement<HTMLElement>(`.${blockName}__description`, container);
 
-        this.successButton.addEventListener('click', () => { events.emit('modal:close') });
+    if (actions?.onClick) {
+      if (this._button) {
+        this._button.addEventListener('click', actions.onClick)
+      }
     }
+  }
 
-    set totalAmount(value: number) {
-        this.successDescription.textContent = String(`Списано ${value} синапсов`);
-    }
+  set description(value: number) {
+    this._description.textContent = 'Списано ' + handlePrice(value) + ' синапсов'
+  }
 }
-

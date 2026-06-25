@@ -1,5 +1,4 @@
-import { IBuyer, TPayment } from '../../types/index.ts'
-import { IEvents } from "../base/Events";
+import { IBuyer} from "../../types";
 
 export class Buyer {
     protected payment: TPayment = '';

@@ -1,52 +1,47 @@
-import { ensureElement } from "../../utils/utils";
-import { Component } from "../base/Component";
-import { IEvents } from "../base/Events";
+import { Component } from '../base/Component';
+import { ensureElement } from '../../utils/utils';
+import { IEvents } from '../base/Events';
 
 interface IModalData {
-    content: HTMLElement;
+  content: HTMLElement;
 }
 
 export class Modal extends Component<IModalData> {
-    protected _closeButton: HTMLButtonElement;
-    protected _content: HTMLElement;
-    protected openFlag: boolean = false;
+  protected _closeButton: HTMLButtonElement;
+  protected _content: HTMLElement;
 
-    constructor(container:HTMLElement, protected events:IEvents) {
-        super(container);
+  constructor(container: HTMLElement, protected events: IEvents) {
+    super(container);
 
-        this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', this.container);
-        this._content = ensureElement<HTMLElement>('.modal__content', this.container);
-        
-        this._closeButton.addEventListener('click', () => {
-            this.events.emit('modal:close')
-        })
+    this._closeButton = ensureElement<HTMLButtonElement>(
+      '.modal__close',
+      container
+    );
+    this._content = ensureElement<HTMLElement>('.modal__content', container);
 
-        this.container.addEventListener('click', (event) => {
-            if (event.target === container) {
-                this.events.emit('modal:close')
-            }
-        })
-    }
+    this._closeButton.addEventListener('click', this.close.bind(this));
+    this.container.addEventListener('click', this.close.bind(this));
+    this._content.addEventListener('click', (event) => event.stopPropagation());
+  }
 
-    set content(value: HTMLElement) {
-        this._content.innerHTML = ''
-        this._content.appendChild(value);
-    }
+  set content(value: HTMLElement) {
+    this._content.replaceChildren(value);
+  }
 
-    open() {
-        if (this.openFlag) { return }
-        this.container.classList.add('modal_active')
-        this.openFlag = true
-    }
+  open() {
+    this.container.classList.add('modal_active');
+    this.events.emit('modal:open');
+  }
 
-    close() {
-        if (!this.openFlag) { return }
-        this.container.classList.remove('modal_active')
-        this.openFlag = false
-    }
+  close() {
+    this.container.classList.remove('modal_active');
+    this._content.innerHTML = '';
+    this.events.emit('modal:close');
+  }
 
-    isOpen(): boolean {
-        return this.openFlag
-    }
-
+  render(data: IModalData): HTMLElement {
+    super.render(data);
+    this.open();
+    return this.container;
+  }
 }

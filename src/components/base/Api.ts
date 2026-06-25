@@ -1,5 +1,10 @@
 type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
 
+export type ApiListResponse<Type> = {
+  total: number;
+  items: Type[];
+};
+
 export class Api {
     readonly baseUrl: string;
     protected options: RequestInit;
@@ -7,6 +12,7 @@ export class Api {
     constructor(baseUrl: string, options: RequestInit = {}) {
         this.baseUrl = baseUrl;
         this.options = {
+            mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
                 ...(options.headers as object ?? {})

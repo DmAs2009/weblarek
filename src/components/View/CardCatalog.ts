@@ -1,47 +1,29 @@
-import { Card } from "./Card";
+import { ICardCatalog, IItem } from "../../types";
 import { IEvents } from "../base/Events";
-import { ensureElement } from "../../utils/utils";
-import { CDN_URL } from "../../utils/constants";
-import { ICard } from "./Card";
-import { categoryMap, CategoryKey } from "../../utils/constants";
 
+export class CardCatalog implements ICardCatalog {
+    protected _items: IItem[] = [];
+    protected events: IEvents;
 
-export interface ICardCatalog extends ICard {
-    
-    category: string;
-    image: string;
-    imageAlt?: string;
-}
-
-export class CardCatalog extends Card<ICardCatalog> {
-    protected cardCategory: HTMLElement;
-    protected imageElement: HTMLImageElement;
-
-    constructor(container: HTMLElement, protected events: IEvents){
-        super(container);
-        
-        this.cardCategory = ensureElement<HTMLElement>('.card__category', this.container);
-        this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
-    
-        this.container.addEventListener('click', () => {
-            this.events.emit('cardCatalog:selected', { id: this.id })
-        })
+    constructor(events: IEvents) {
+        this.events = events;
     }
 
-    set category(value: CategoryKey) {
-        const className = categoryMap[value]
-
-        if(!className) { return }
-
-        this.cardCategory.classList.add(className)
-        this.cardCategory.textContent = value
+    set items(items:IItem[]) {
+        this._items = items;
+        this.events.emit('showcase:changed')
     }
 
-    set image(value: string) {
-        this.setImage(this.imageElement, CDN_URL + value, this.imageAlt)
+    get items () {
+        return this._items;
     }
 
-    set imageAlt(value: string) {
-        this.imageElement.alt = value
+    getItem(itemId:string) {
+        return this._items.find((item) => item.id === itemId)
+    }
+
+    getItemPrice(itemId:string) {
+        const item = this.getItem(itemId);
+        return item ? item.price : undefined;
     }
 }

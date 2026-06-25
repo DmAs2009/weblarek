@@ -15,6 +15,10 @@ export interface IApi {
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
 
+export interface IApiResponse {
+  items: IProduct[];
+}
+
 // Интерфейс товара
 
 export interface IProduct {
@@ -23,7 +27,8 @@ export interface IProduct {
   image: string;
   title: string;
   category: string;
-  price: TItemPrice;
+  price: number | null;
+  selected?: boolean;
 }
 
 export type TProductListResponse = {
@@ -53,23 +58,106 @@ export interface IBuyer {
   address: string;
 }
 
-// Тип для данных заказа
-export interface TOrderData extends IBuyer{
-    total: number; 
-    items: string[]; 
+// Интерфейсы для категорий и цены товара
+
+export type TItemCategory = 'софт-скил' | 'хард-скил' | 'другое' | 'кнопка' | 'дополнительное';
+export type TItemPrice = number | null;
+
+export const CategoryType: Record<TItemCategory, string> = {
+    'софт-скил': 'soft',
+    'хард-скил': 'hard',
+    'другое': 'other',
+    'кнопка': 'button',
+    'дополнительное': 'additional',
 }
 
-// Тип для успешного ответа заказа
-export type TOrderSuccess = {
+//Интерфейс для описания одного товара
+
+export interface IItem {
     id: string;
-    total: number;
+    itemIndex: number;
+    category: TItemCategory;
+    description: string;
+    image: string;
+    price: TItemPrice;
+    title: string;
 }
 
-// Тип для ошибки заказа  
-export type TOrderError = {
-    error: string;
+//Интерфейс для добавления в корзину
+
+export interface ICardPreview extends IItem {
+  inBasket: boolean;
+  canAddToBasket: boolean;
 }
 
-// Тип для ответа на создание заказа
-export type TOrderResponse = TOrderSuccess | TOrderError;
+// Интерфейс главной страницы с карточками
 
+export interface ICardCatalog {
+    items: IItem[];
+    getItem(itemId:string) : IItem | undefined;
+    getItemPrice(itemId:string) : TItemPrice | undefined;
+}
+
+export type FormErrors = Partial<Record<keyof IOrderForm, string>>;
+
+export interface IOrder {
+  // Массив ID купленных товаров
+  items: string[];
+
+  // Способ оплаты
+  payment: string;
+
+  // Сумма заказа
+  total: number;
+
+  // Адрес доставки
+  address: string;
+
+  // Электронная почта
+  email: string;
+
+  // Телефон
+  phone: string;
+}
+
+export interface IOrderForm {
+  payment: string;
+  address: string;
+  email: string;
+  phone: string;
+}
+
+export interface IAppState {
+  // Корзина с товарами
+  basket: IProduct[];
+  // Массив карточек товара
+  store:IProduct[];
+  // Информация о заказе при покупке товара
+  order: IOrder;
+  // Ошибки при заполнении форм
+  formErrors: FormErrors;
+  // Метод для добавления товара в корзину
+  addToBasket(value: IProduct): void;
+  // Метод для удаления товара из корзины
+  deleteFromBasket(id: string): void;
+  // Метод для полной очистки корзины
+  clearBasket(): void;
+  // Метод для получения количества товаров в корзине
+  getBasketAmount(): number;
+  // Метод для получения суммы цены всех товаров в корзине
+  getTotalBasketPrice(): number;
+  // Метод для добавления ID товаров в корзине в поле items для order
+  setItems(): void;
+  // Метод для заполнения полей email, phone, address, payment в order
+  setOrderField(field: keyof IOrderForm, value: string): void;
+  // Валидация форм для окошка "контакты"
+  validateContacts(): boolean;
+  // Валидация форм для окошка "заказ"
+  validateOrder(): boolean;
+  // Очистить order после покупки товаров
+  refreshOrder(): boolean;
+  // Метод для превращения данных, полученых с сервера в тип данных приложения
+  setStore(items: IProduct[]): void;
+  // Метод для обновления поля selected во всех товарах после совершения покупки
+  resetSelected(): void;
+}
