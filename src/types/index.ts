@@ -1,14 +1,4 @@
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
-export type TItemCategory = 'софт-скил' | 'хард-скил' | 'другое' | 'кнопка' | 'дополнительное';
-export type TItemPrice = number | null;
-
-export const categoryType: Record<TItemCategory, string> = {
-    'софт-скил': 'soft',
-    'хард-скил': 'hard',
-    'другое': 'other',
-    'кнопка': 'button',
-    'дополнительное': 'additional',
-}
 
 export interface IApi {
     get<T extends object>(uri: string): Promise<T>;
@@ -31,7 +21,7 @@ export interface IProduct {
   selected?: boolean;
 }
 
-export type TProductListResponse = {
+export interface IProductListResponse {
   total: number;
   items: IProduct[];
 }
@@ -47,12 +37,12 @@ export interface IOrderResponse {
   total: number;
 }
 
-export type TPayment = "cash" | "card" |'';
+export type TPayment = "cash" | "online";
 
 // Интерфейс покупателя
 
 export interface IBuyer {
-  payment: TPayment;
+  payment: TPayment | null;
   email: string;
   phone: string;
   address: string;
