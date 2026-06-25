@@ -1,6 +1,5 @@
 import './scss/styles.scss';
 
-import { Buyer } from './components/Models/Buyer';
 import { Products } from './components/Models/Products';
 import { Cart } from './components/Models/Cart';
 import { apiProducts } from './utils/data';
@@ -24,22 +23,22 @@ import { Product } from './components/View/AppPage';
 
 const events = new EventEmitter();
 
-const api = new Api(API_URL)
 
+/*
 // Тестирование Products
 
 console.log('=== Тестирование Products ===');
 
-const productsModel = new Products();
+const productsModel = new Products(events);
 
 // 1. Проверка сохранения товаров
 console.log('\n1. Сохранение товаров из API:');
-productsModel.setItems(apiProducts.items);
+productsModel.setProductItems(apiProducts.items);
 console.log('Массив товаров после сохранения:', productsModel.getItems());
 
 // 2. Проверка получения товаров
 console.log('\n2. Получение всех товаров:');
-console.log('Первые 3 товара:', productsModel.getItems().slice(0, 3));
+console.log('Товары:', productsModel.getItems());
 
 // 3. Проверка получения товара по ID
 

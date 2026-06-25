@@ -1,33 +1,41 @@
 import {IProduct} from '../../types'
+import { IEvents } from '../base/Events';
 
 export class Cart {
-    private items: IProduct[] = [];
+    private selectedItems: IProduct[] = [];
 
-    getItems(): IProduct[] {
-        return [...this.items];
+    constructor (protected events: IEvents) {}
+
+    getSelectedItems(): IProduct[] {
+        return this.selectedItems;
     }
     
     addItem(product: IProduct): void {
-        this.items.push(product);
+        this.selectedItems.push(product);
+        this.events.emit('cart:change')
     }
 
-    removeItem(productId: string): void {
-        this.items = this.items.filter((item) => item.id !== productId);
+    removeItem(productToRemove: IProduct): void {
+        this.selectedItems = this.selectedItems.filter((item) => item.id !== productToRemove.id);
+        this.events.emit('cart:change')
     } 
 
     clearCart():void {
-        this.items = []
+        this.selectedItems = [];
+        this.events.emit('cart:change')
     }
 
     getTotalPrice(): number {
-        return this.items.reduce((total, item) => total +(item.price || 0), 0);
+        return this.selectedItems.reduce((total, product) => {
+            return total + (product.price ?? 0)
+        }, 0)
     }
 
     getItemsQuantity(): number{
-        return this.items.length
+        return this.selectedItems.length
     }
 
     checkItem(productId: string): boolean {
-        return this.items.some((item) => item.id === productId);
+        return this.selectedItems.some((item) => item.id === productId);
     } 
 }

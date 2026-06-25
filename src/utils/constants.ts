@@ -16,6 +16,8 @@ export const categoryMap = {
   'другое': 'card__category_other',
 };
 
+export type CategoryKey = keyof typeof categoryMap;
+
 export const settings = {
 
 };
