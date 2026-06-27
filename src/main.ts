@@ -174,12 +174,8 @@ function init() {
   //Создание заказа
 
   events.on('cart:makeOrder',() =>{
-    const buyer =buyerModel.getBuyerData()
-    buyerModel.updateBuyer(buyer);
     modalView.render({ 
-        content: formOrderView.render({
-        paymentMethod: buyer.payment,
-        address: buyer.address,})
+        content: formOrderView.render({})
     })
   })
 
@@ -190,12 +186,8 @@ events.on<Partial<IBuyer>>('buyer:change', ( data) => {
 
 // Заполнение формы адреса и выбора оплаты
 events.on('formOrder:submit', () => {
-    const buyer =  buyerModel.getBuyerData()
-
     modalView.render({ 
-        content: formContactsView.render({
-        email: buyer.email,
-        phoneNumber: buyer.phone,})
+        content: formContactsView.render({})
     })
 })
 
@@ -203,24 +195,14 @@ events.on('formOrder:submit', () => {
 events.on<{ email: string; phoneNumber: string;}>('formContacts:submit', async () => {
             
     try {
-            const itemsId = cartModel.getSelectedItems().map((item) => item.id)
-            const order = await larekApi.createOrder({
-                ...buyerModel.getBuyerData(),
-                total: cartModel.getTotalPrice(),
-                items: itemsId,
+          modalView.render({ 
+            content: orderSuccessView.render({
+            totalAmount: cartModel.getTotalPrice()
             })
+          })
 
-            if ('id' in order) {
-                modalView.render({ 
-                    content: orderSuccessView.render({
-                    totalAmount: order.total
-                    })
-                })
-
-                buyerModel.clearBuyerData()
-                cartModel.clearCart()
-
-            }
+          buyerModel.clearBuyerData()
+          cartModel.clearCart()
 
         } catch (err) {
             console.error('Ошибка при создании заказа:', err)
@@ -293,7 +275,7 @@ console.log('Товар по ID:', productsModel.getItemById("b06cde61-912f-4663
 // 4. Проверка сохранения выбранного товара
 
 console.log('\n4. Проверка сохранения выбранного товара:');
-console.log('Сохраняем товар выбранный товар:', productsModel.saveSelectedItem(apiProducts.items[0]));
+console.log('Сохраняем товар выбранный товар:', productsModel.setSelectedItem(apiProducts.items[0]));
 
 // 5. Вывод выбранного товара
 
