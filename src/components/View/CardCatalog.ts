@@ -7,7 +7,6 @@ import { categoryMap, CategoryKey } from "../../utils/constants";
 
 
 export interface ICardCatalog extends ICard {
-    
     category: string;
     image: string;
     imageAlt?: string;

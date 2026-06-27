@@ -23,7 +23,6 @@ export class Products {
     setSelectedItem(product: IProduct): void {
         this.selectedProduct = product;
         this.events.emit('cardCatalog:openCard', { id: product.id })
-
     }
 
     getSelectedItem(): IProduct | undefined {

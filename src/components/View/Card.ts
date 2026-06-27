@@ -3,7 +3,6 @@ import { Component } from "../base/Component";
 
 
 export interface ICard {
-    id: string;
     title: string;
     price: number | null;
 }
@@ -11,7 +10,6 @@ export interface ICard {
 export class Card<T extends ICard> extends Component<T> {
     protected cardTitle: HTMLElement;
     protected cardPrice: HTMLElement;
-    protected id: string = ''
 
     constructor(container: HTMLElement) {
         super(container);

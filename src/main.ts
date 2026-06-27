@@ -82,7 +82,7 @@ function init() {
             
     galleryView.render({ catalog: items })
   })
-
+  
 // Клик по карточке из каталога
   events.on<{id: string}>('cardCatalog:selected', ({ id }) => {
     //Для траблшутинга - карточка не открывается.
