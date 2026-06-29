@@ -4,6 +4,7 @@ import { IEvents } from '../base/Events';
 export class Products {
     private productItems: IProduct[] = [];
     private selectedProduct: IProduct | undefined =  undefined;
+    
 
     constructor (protected events: IEvents) {}
 

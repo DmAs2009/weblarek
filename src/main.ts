@@ -76,32 +76,33 @@ function init() {
 //Отрисовка каталога
   events.on('Products:addProducts', () => {
     const items = productsCatalog.getItems().map((item) => {
-        const card = new CardCatalog(cloneTemplate(cardCatalogTemplate),  events)
-        return card.render(item)
+    const handleClick = () => {
+      // item доступен через замыкание
+      events.emit('cardCatalog:selected', { id: item.id });
+      };
+    const card = new CardCatalog(cloneTemplate(cardCatalogTemplate),  handleClick)
+    return card.render(item)
     })
-            
+
     galleryView.render({ catalog: items })
   })
   
 // Клик по карточке из каталога
-  events.on<{id: string}>('cardCatalog:selected', ({ id }) => {
-    //Для траблшутинга - карточка не открывается.
-    //console.log(`"Айди товара:"${id}`);
-    const selectedProduct = productsCatalog.getItemById(id)
-    //Для траблшутинга
-    //console.log(selectedProduct);
-    if (selectedProduct) {
-        productsCatalog.setSelectedItem(selectedProduct);
+  events.on<{id: string}>('cardCatalog:selected', (selectedItem) => {
+    const selectedProduct = productsCatalog.getItemById(selectedItem.id);
+    if (!selectedProduct) {
+        console.error('Товар не найден!');
+        return;
     }
-  })
-  
-  // Открытие карточки в модальном окне
-  events.on<{id: string}>('cardCatalog:openCard', ({ id }) => {
-    const product = productsCatalog.getItemById(id);
-    cardPreviewView.buttonChange = cartModel.checkItem(id);
-    modalView.open()
-    modalView.render({ content: cardPreviewView.render(product) })              
-  })
+    productsCatalog.setSelectedItem(selectedProduct);
+    
+    cardPreviewView.buttonChange = cartModel.checkItem(selectedItem.id);
+    
+    modalView.open();
+    modalView.render({ 
+        content: cardPreviewView.render(selectedProduct) 
+    });
+});
 
   // Закрытие модального окна
   events.on('modal:close', () => {
@@ -109,36 +110,39 @@ function init() {
   })
 
   // Нажатие на кнопку в карточке товара
-  events.on<{id: string}>('cardPreviewButton:click', ({ id }) => {
-    const product = productsCatalog.getItemById(id)
-    const addedToCart = cartModel.checkItem(id)
-    // Тестирование, что получаю товар и переключаю флаг addedToCart
-    // console.log(product)
-    //console.log(addedToCart)
-    if (!product) {return}
-
+  events.on('cardPreviewButton:click', () => {
+    // Берем выбранный товар из модели продуктов
+    const selectedProduct = productsCatalog.getSelectedItem();
+    
+    if (!selectedProduct) return; // Если товара нет
+    
+    // Проверяем в корзине
+    const addedToCart = cartModel.checkItem(selectedProduct.id);
+    
+    // Применяем логику
     if (!addedToCart) {
-      cartModel.addItem(product);
+        cartModel.addItem(selectedProduct);
     } else {
-      cartModel.removeItem(product);
+        cartModel.removeItem(selectedProduct);
     }
-  })
-
-  // Меняем кнопку в карточке
-
-  events.on<{id:string}>('cardPreviewButton:change',({id}) => {
-    const alreadyAdded = cartModel.checkItem(id);
-
-    cardPreviewView.buttonChange = alreadyAdded;
-  })
+    
+    // Обновляем кнопку в превью
+    cardPreviewView.buttonChange = cartModel.checkItem(selectedProduct.id);
+});
 
   // Получаем список товаров в корзине
   const getCartList = (): HTMLElement[] => {
-    const cartList = cartModel.getSelectedItems().map((list, index) => {
-        const card = new CardCart(cloneTemplate(cardCartTemplate), events)
-        return card.render({...list, index: index + 1})
-    })
-    return cartList
+     const cartList = cartModel.getSelectedItems().map((item, index) => {
+        // Создаем колбэк для удаления
+        const handleDelete = () => {
+            events.emit('cart:remove', { id: item.id });
+        };
+        
+        // Передаем колбэк в конструктор CardCart
+        const card = new CardCart(cloneTemplate(cardCartTemplate), events, handleDelete);
+        return card.render({...item, index: index + 1});
+    });
+    return cartList;
   }
 
   // Изменение в корзине
@@ -170,6 +174,7 @@ function init() {
     }  
 
   })
+  
 
   //Создание заказа
 

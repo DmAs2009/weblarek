@@ -1,5 +1,4 @@
 import { Card } from "./Card";
-import { IEvents } from "../base/Events";
 import { ensureElement } from "../../utils/utils";
 import { CDN_URL } from "../../utils/constants";
 import { ICard } from "./Card";
@@ -16,15 +15,13 @@ export class CardCatalog extends Card<ICardCatalog> {
     protected cardCategory: HTMLElement;
     protected imageElement: HTMLImageElement;
 
-    constructor(container: HTMLElement, protected events: IEvents){
+    constructor(container: HTMLElement, onClick: () => void){
         super(container);
         
         this.cardCategory = ensureElement<HTMLElement>('.card__category', this.container);
         this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
     
-        this.container.addEventListener('click', () => {
-            this.events.emit('cardCatalog:selected', { id: this.id })
-        })
+        this.container.addEventListener('click', onClick)
     }
 
     set category(value: CategoryKey) {

@@ -25,9 +25,9 @@ export class CardPreview extends Card<ICardPreview> {
         this.cardButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
         
         this.cardButton.addEventListener('click', () => {
-            this.events.emit('cardPreviewButton:click', { id: this.id})
-            this.events.emit('cardPreviewButton:change', { id: this.id})
-        })         
+            this.events.emit('cardPreviewButton:click')
+        })
+     
     }
 
     set price(value: number | null) {
